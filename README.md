@@ -33,7 +33,16 @@ This generates a new API client. It accepts options arguments.
 - [melotic.getMarketPrice(id, callback)](#getMarketPrice)
 - [melotic.getMarketBuyDepth(id, params, callback)](#getMarketBuyDepth)
 - [melotic.getMarketSellDepth(id, params, callback)](#getMarketSellDepth)
-- [melotic.getCompletedOrders(id, params, callback)](#getCompletedOrders)
+- [melotic.getCompletedMarketOrders(id, params, callback)](#getCompletedMarketOrders)
+- [melotic.getAccountBalances(callback)](#getAccountBalances)
+- [melotic.getCompletedOrders(params, callback)](#getCompletedOrders)
+- [melotic.getPendingOrders(params, callback)](#getPendingOrders)
+- [melotic.getDepositAddresses(callback)](#getDepositAddresses)
+- [melotic.getDepositHistory(callback)](#getDepositHistory)
+- [melotic.getWithdrawalHistory(params, callback)](#getWithdrawalHistory)
+- [melotic.createSellOrder(marketId, amount, price, callback)](#createSellOrder)
+- [melotic.createBuyOrder(marketId, amount, price, callback)](#createBuyOrder)
+- [melotic.cancelOrder(id, callback)](#cancelOrder)
 
 <a name="getMarkets"></a>
 #### getMarkets  
