@@ -7,6 +7,7 @@ var Melotic = require('../')
   , should = require('should')
   , accessKey = process.env.accessKey
   , secret = process.env.secret
+  , secret = process.env.secret
   , _ = require('lodash')
   , async = require('async');
 
@@ -32,16 +33,35 @@ describe('melotic', function() {
       melotic.getMarkets(function(err, markets) {
         should.not.exist(err);
         _.size(markets).should.be.above(-1);
-        done()
+        done();
       })
     });
   });
 
 
   describe('Hit private api live', function() {
-    it('should tell you if you didn\'t set an accessKey for live testing', function() {
-      if(!accessKey) console.warn('NOTE: No api key provided. Hit api live tests will not be exercised. If you want to test an actual api hit. Do `accessKey=<Your melotic api key> npm test`');
+    it('should tell you if you didn\'t set an accessKey and secret for live testing', function() {
+      if(!accessKey) console.warn('NOTE: No api key provided. Hit api live tests will not be exercised. If you want to test an actual api hit. Do `accessKey=<Your melotic api key> secret=<Your melotic api secret> npm test`');
+      else if(!secret) console.warn('NOTE: No api secret provided. Hit api live tests will not be exercised. If you want to test an actual api hit. Do `accessKey=<Your melotic api key> secret=<Your melotic api secret> npm test`');
       else console.warn('You are hitting melotic\'s API live!')
+    });
+
+    var describeOrSkip = secret && accessKey ? describe : describe.skip;
+
+    describeOrSkip('#getAccountBalances', function() {
+      it('should get account balances', function(done) {
+        var melotic = new Melotic({
+          accessKey: accessKey,
+          secret: secret
+        });
+
+        melotic.getAccountBalances(function(err, data) {
+          should.not.exist(err);
+          data.balances.should.be.ok;
+          data.frozen_balances.should.be.ok;
+          done();
+        })
+      });
     });
   });
 
@@ -57,16 +77,53 @@ describe('melotic', function() {
         signature: 'dffbbc3c7c0112383afef1d5fa2980f953c0aa237c6cf57734b3bafdc2716284'
       }];
 
+      var melotic = new Melotic();
+      
       async.parallel(examples.map(function(example) {
-        var melotic = new Melotic({
-          accessKey: example.params.access_key,
-          secret: example.secret
-        });
         return function(cb) {
-          melotic._sign(example.params).should.equal(example.signature);
+          melotic._sign(example.params, example.secret).should.equal(example.signature);
           cb();
         };
       }), done);
     })
+  });
+
+  describe('_callMeloticSigned', function() {
+    it('should not allow a call without an accessKey', function(done) {
+      var melotic = new Melotic({
+        secret: 's0e1c1r097y3j4k4i8jfdlet'
+      });
+
+      melotic._callMeloticSigned({}, function(err) {
+        should.exist(err);
+        done();
+      })
+    });
+
+    it('should not allow a call without a secret', function(done) {
+      var melotic = new Melotic({
+        accessKey: '239jlk929e8323a4'
+      });
+
+      melotic._callMeloticSigned({}, function(err) {
+        should.exist(err);
+        done();
+      })
+    });
+
+    it('should allow a call with both an accessKey and secret and correctly fill in the nonce, access_key, and signature fields', function(done) {
+      var melotic = new Melotic({
+        secret: 's0e1c1r097y3j4k4i8jfdlet',
+        accessKey: '239jlk929e8323a4',
+        shortCircuitMelotic: function(params) {
+          params.body.nonce.should.be.ok;
+          params.body.access_key.should.be.ok;
+          params.body.signature.should.be.ok;
+          done();
+        }
+      });
+
+      melotic._callMeloticSigned({body:{}});
+    });
   });
 });
