@@ -23,7 +23,8 @@ This generates a new API client. It accepts options arguments.
 
 ##### options:
 
--`apiKey` **string** Optional. Your Melotic api key for write operations, like creating an invoice.
+-`accessKey` **string** Optional. Your Melotic api access key for write operations, like submitting a bid.
+-`secret` **string** Optional. Your Melotic secret corresponding to your access key for signing write operations.
 
 ### Melotic client
 
