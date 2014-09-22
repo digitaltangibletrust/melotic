@@ -5,7 +5,7 @@ The melotic REST api https://www.melotic.com/apidoc  wrapped for NodeJS/JavaScri
 
 Why we created it?
 =========
-We created this API wrapper so you could access the equivalent REST API through simple asynchronous functions with all the power provided by Molotic's direct API. This API uses simple method calls without all of the hassle of writing API request URLs, body and query strings.
+We created this API wrapper so you could access the equivalent REST API through simple asynchronous functions with all the power provided by Melotic's direct API. This API uses simple method calls without all of the hassle of writing API request URLs, body and query strings.
 
 Pull requests are welcomed!
 
