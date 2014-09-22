@@ -1,7 +1,7 @@
 melotic
 =========
 
-The melotic api wrapped for NodeJS/JavaScript.
+The melotic REST api https://www.melotic.com/apidoc  wrapped for NodeJS/JavaScript.
 
 Why we created it?
 =========
