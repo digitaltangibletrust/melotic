@@ -11,9 +11,13 @@
     "debug": "~0.7.4",
     "request": "2.34.0",
     "lodash": "2.4.1",
-    "form-urlencoded": "0.0.6"
+    "form-urlencoded": "0.0.6",
+    "browser-request": "^0.3.1"
   },
-  "devDependencies": {
+  "browser": {
+    "request": "browser-request"
+  },
+    "devDependencies": {
     "should": "3.3.1",
     "mocha": "1.18.2",
     "async": "0.9.0"
