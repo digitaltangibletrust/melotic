@@ -63,6 +63,26 @@ describe('melotic', function() {
         })
       });
     });
+
+    // you'll have to unskip this one to try it
+    describe.skip('#createAccount', function() {
+      it('should create an account', function(done) {
+        var melotic = new Melotic({
+          accessKey: accessKey,
+          secret: secret
+        });
+
+        var email = Math.floor(Math.random() * 100000000) + '@decryptocoin.com'
+          , pass = Math.floor(Math.random() * 100000000);
+
+        melotic.createAccount(email, pass, function(err, res) {
+          should.not.exist(err);
+          res.should.be.ok;
+          console.log('You just created account: ' + email + '/' + pass + ' at melotic.');
+          done();
+        })
+      });
+    });
   });
 
   describe('_sign', function() {
