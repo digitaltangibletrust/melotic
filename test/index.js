@@ -66,19 +66,48 @@ describe('melotic', function() {
 
     // you'll have to unskip this one to try it
     describe.skip('#createAccount', function() {
+      var email = Math.floor(Math.random() * 100000000) + '@decryptocoin.com'
+        , pass = Math.floor(Math.random() * 100000000);
+
       it('should create an account', function(done) {
         var melotic = new Melotic({
           accessKey: accessKey,
           secret: secret
         });
 
-        var email = Math.floor(Math.random() * 100000000) + '@decryptocoin.com'
-          , pass = Math.floor(Math.random() * 100000000);
-
         melotic.createAccount(email, pass, function(err, res) {
           should.not.exist(err);
           res.should.be.ok;
           console.log('You just created account: ' + email + '/' + pass + ' at melotic.');
+          console.log(err, res);
+          done();
+        })
+      });
+
+      it('should not create a duped account', function(done) {
+        var melotic = new Melotic({
+          accessKey: accessKey,
+          secret: secret
+        });
+
+        melotic.createAccount(email, pass, function(err, res) {
+          should.exist(err);
+          console.log(err, res);
+          done();
+        })
+      });
+
+      it('should not create an account with a < 8 char pass', function(done) {
+        var melotic = new Melotic({
+          accessKey: accessKey,
+          secret: secret
+        });
+
+        var email = Math.floor(Math.random() * 100000000) + '@decryptocoin.com'
+
+        melotic.createAccount(email, '22short', function(err, res) {
+          should.exist(err);
+          console.log(err, res);
           done();
         })
       });
