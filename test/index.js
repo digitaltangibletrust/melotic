@@ -7,9 +7,9 @@ var Melotic = require('../')
   , should = require('should')
   , accessKey = process.env.accessKey
   , secret = process.env.secret
-  , secret = process.env.secret
   , _ = require('lodash')
-  , async = require('async');
+  , async = require('async')
+  , Proxy = require('../proxy');
 
 Melotic.version.should.match(/^\d+\.\d+\.\d+$/);
 
@@ -34,7 +34,7 @@ describe('melotic', function() {
         should.not.exist(err);
         _.size(markets).should.be.above(-1);
         done();
-      })
+      });
     });
   });
 
@@ -60,7 +60,7 @@ describe('melotic', function() {
           data.balances.should.be.ok;
           data.frozen_balances.should.be.ok;
           done();
-        })
+        });
       });
     });
 
@@ -81,7 +81,7 @@ describe('melotic', function() {
           console.log('You just created account: ' + email + '/' + pass + ' at melotic.');
           console.log(err, res);
           done();
-        })
+        });
       });
 
       it('should not create a duped account', function(done) {
@@ -94,7 +94,7 @@ describe('melotic', function() {
           should.exist(err);
           console.log(err, res);
           done();
-        })
+        });
       });
 
       it('should not create an account with a < 8 char pass', function(done) {
@@ -109,7 +109,7 @@ describe('melotic', function() {
           should.exist(err);
           console.log(err, res);
           done();
-        })
+        });
       });
     });
   });
@@ -146,7 +146,7 @@ describe('melotic', function() {
       melotic._callMeloticSigned({}, function(err) {
         should.exist(err);
         done();
-      })
+      });
     });
 
     it('should not allow a call without a secret', function(done) {
@@ -157,7 +157,7 @@ describe('melotic', function() {
       melotic._callMeloticSigned({}, function(err) {
         should.exist(err);
         done();
-      })
+      });
     });
 
     it('should allow a call with both an accessKey and secret and correctly fill in the nonce, access_key, and signature fields', function(done) {
@@ -173,6 +173,28 @@ describe('melotic', function() {
       });
 
       melotic._callMeloticSigned({body:{}});
+    });
+  });
+
+  describe('proxy', function() {
+    var proxy
+      , port = 9999;
+    before(function() {
+      proxy = Proxy(port);
+    });
+
+    after(function(done) {
+      proxy.close(done);
+    });
+    
+    it('should proxy an api call', function(done) {
+      var melotic = new Melotic({url: 'http://localhost:' + port});
+
+      melotic.getMarkets(function(err, markets) {
+        should.not.exist(err);
+        _.size(markets).should.be.above(-1);
+        done();
+      });
     });
   });
 });
