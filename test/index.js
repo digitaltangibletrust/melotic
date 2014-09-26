@@ -9,7 +9,8 @@ var Melotic = require('../')
   , secret = process.env.secret
   , _ = require('lodash')
   , async = require('async')
-  , Proxy = require('../proxy');
+  , Proxy = require('../proxy')
+  , describeOrSkip = secret && accessKey ? describe : describe.skip;
 
 Melotic.version.should.match(/^\d+\.\d+\.\d+$/);
 
@@ -46,7 +47,6 @@ describe('melotic', function() {
       else console.warn('You are hitting melotic\'s API live!')
     });
 
-    var describeOrSkip = secret && accessKey ? describe : describe.skip;
 
     describeOrSkip('#getAccountBalances', function() {
       it('should get account balances', function(done) {
@@ -60,6 +60,23 @@ describe('melotic', function() {
           data.balances.should.be.ok;
           data.frozen_balances.should.be.ok;
           done();
+        });
+      });
+
+      describe('Nonce', function() {
+        it('should mash 4 signed calls at once without nonce errors', function(done) {
+          var melotic = new Melotic({
+            accessKey: accessKey,
+            secret: secret,
+            meter: 300
+          });
+
+          async.parallel([
+            melotic.getAccountBalances.bind(melotic),
+            melotic.getDepositAddresses.bind(melotic),
+            melotic.getPendingOrders.bind(melotic, {}),
+            melotic.getCompletedOrders.bind(melotic, {})
+          ], done);
         });
       });
     });
@@ -194,6 +211,24 @@ describe('melotic', function() {
         should.not.exist(err);
         _.size(markets).should.be.above(-1);
         done();
+      });
+    });
+
+    describeOrSkip('Nonce', function() {
+      it('should mash 4 signed calls at once without nonce errors', function(done) {
+        var melotic = new Melotic({
+          accessKey: accessKey,
+          secret: secret,
+          meter: 300,
+          url: 'http://localhost:' + port
+        });
+
+        async.parallel([
+          melotic.getAccountBalances.bind(melotic),
+          melotic.getDepositAddresses.bind(melotic),
+          melotic.getPendingOrders.bind(melotic, {}),
+          melotic.getCompletedOrders.bind(melotic, {})
+        ], done);
       });
     });
   });
