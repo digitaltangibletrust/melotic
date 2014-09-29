@@ -81,6 +81,22 @@ describe('melotic', function() {
       });
     });
 
+    describe('usingFundPassword', function() {
+      it('should get using fund password setting', function(done) {
+        var melotic = new Melotic({
+          accessKey: accessKey,
+          secret: secret
+        });
+
+        melotic.usingFundPassword(function(err, data) {
+          should.not.exist(err);
+          data.should.be.ok;
+          console.log(data);
+          done();
+        });
+      });
+    });
+
     // you'll have to unskip this one to try it
     describe.skip('#createAccount', function() {
       var email = Math.floor(Math.random() * 100000000) + '@decryptocoin.com'
