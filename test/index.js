@@ -81,7 +81,7 @@ describe('melotic', function() {
       });
     });
 
-    describe('usingFundPassword', function() {
+    describe.skip('usingFundPassword', function() {
       it('should get using fund password setting', function(done) {
         var melotic = new Melotic({
           accessKey: accessKey,
